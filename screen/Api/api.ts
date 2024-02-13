@@ -6,13 +6,13 @@ class AsterApi {
           const response = await fetch(url);
     
           if (!response.ok) {
-            throw new Error('Errore nella richiesta API');
+            throw new Error('Error Request API');
           }
     
           const data = await response.json();
           return data;
         } catch (error) {
-          console.error('Si è verificato un errore:', error);
+          console.error('error:', error);
           throw error;
         }
       }

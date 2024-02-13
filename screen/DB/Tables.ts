@@ -1,4 +1,5 @@
 import { enablePromise } from "react-native-sqlite-storage";
+import Database from "./connectionDB";
 
 enablePromise(true);
 class Tables {
@@ -19,70 +20,113 @@ class Tables {
     this.name = name;
     this.columns = columns;
   }
-  //toDO inserire qui tutti i metodi crud per le tabelle
-  //todo init se esistono le tabelle o ci sonoi cambiamenti
-  createTable = async (connection: any) => {
-    const columnDefinitions = this.columns.map(column => `${column.name} ${column.type}`).join(', ');
-    const sql = `
-            CREATE TABLE IF NOT EXISTS ${this.name} (
-                ${columnDefinitions}
-            )
-        `;
-    try {
-      await connection.executeSql(sql);
-      console.log(`Table ${this.name} create!`);
-    } catch (error) {
-      console.error(`Errore durante la creazione della tabella ${this.name}:`, error);
-      throw error;
+  //creare metodo init da richiamare nella home dove avviene il controllo se esistono tabelle nel db, e se dall'api arrivano dei cambiamenti updatare le tabelle
+
+  init = async () => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    if (connection) {
+      const sql = `SELECT name FROM sqlite_master WHERE type='table' AND name=?;`;
+      try {
+        const result = await connection.executeSql(sql, [this.name]);
+        // console.log('result[0].rows.item::', result[0].rows.item(0))
+        if (result[0].rows.length > 0) {
+          console.log('controllare se api è da modificare e fare update')
+        } else {
+          await this.create()
+        }
+      } catch (error) {
+        console.error(`check table "${this.name}" not possible:`, error);
+        throw error;
+      }
+    }
+  }
+
+  create = async () => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    if (connection) {
+      const columnDefinitions = this.columns.map(column => `${column.name} ${column.type}`).join(', ');
+      const sql = `
+        CREATE TABLE IF NOT EXISTS ${this.name} (
+            ${columnDefinitions}
+        )
+      `;
+      try {
+        await connection.executeSql(sql);
+        console.log(`Table "${this.name}" create!`);
+      } catch (error) {
+        console.error(`Table "${this.name}" not created:`, error);
+        throw error;
+      }
+    }
+  }
+
+
+  insert = async (data: any) => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    if (connection) {
+      try {
+        const entries = Object.entries(data);
+        const columns = entries.map(([key]) => key).join(', ');
+        const values = entries.map(([, value]) => `"${value}"`).join(', ');
+        const sql = `INSERT INTO ${this.name} (${columns}) VALUES (${values})`;
+        await connection.executeSql(sql);
+        console.log(` Data insert in table: "${this.name}" `);
+      } catch (error) {
+        console.error(`Error data insert ${this.name}:`, error);
+        throw error;
+      }
     }
   };
 
-  insert = async (connection: any,  data: any) => {
-    try {
-      const entries = Object.entries(data);
-      const columns = entries.map(([key]) => key).join(', ');
-      const values = entries.map(([, value]) => `"${value}"`).join(', ');
-      const sql = `INSERT INTO ${this.name} (${columns}) VALUES (${values})`;
-      await connection.executeSql(sql);
-      console.log(`Dati inseriti nella tabella ${this.name} con successo!`);
-    } catch (error) {
-      console.error(`Errore durante l'inserimento dei dati nella tabella ${this.name}:`, error);
-      throw error;
+
+
+  update = async (id: number, data: any) => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    if (connection) {
+      try {
+        const updates = Object.entries(data).map(([key, value]) => `${key} = "${value}"`).join(', ');
+        const sql = `UPDATE ${this.name} SET ${updates} WHERE id = ${id}`;
+        await connection.executeSql(sql);
+        console.log(`Update correct in "${this.name}" table`);
+      } catch (error) {
+        console.error(`Error update in table ${this.name}:`, error);
+        throw error;
+      }
     }
   };
 
-  update = async (connection: any, id: number, data: any) => {
-    try {
-      const updates = Object.entries(data).map(([key, value]) => `${key} = "${value}"`).join(', ');
-      const sql = `UPDATE ${this.name} SET ${updates} WHERE id = ${id}`;
-      await connection.executeSql(sql);
-      console.log(`Dati aggiornati nella tabella ${this.name} con successo!`);
-    } catch (error) {
-      console.error(`Errore durante l'aggiornamento dei dati nella tabella ${this.name}:`, error);
-      throw error;
+  get = async (criteria: string) => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    if (connection) {
+      try {
+        const sql = `SELECT * FROM ${this.name} WHERE ${criteria}`;
+        const result = await connection.executeSql(sql);
+        console.log('result[0].rows.item', result[0].rows.item(0))
+        return result[0].rows.raw();
+      } catch (error) {
+        console.error(`Error in get data from "${this.name}" table:`, error);
+        throw error;
+      }
     }
   };
 
-  get = async (connection: any,  criteria: string) => {
-    try {
-      const sql = `SELECT * FROM ${this.name} WHERE ${criteria}`;
-      const result = await connection.executeSql(sql);
-      console.log('result[0].rows.item', result[0].rows.item(0))
-      return result[0].rows.raw();
-    } catch (error) {
-      console.error(`Errore durante il recupero dei dati dalla tabella ${this.name}:`, error);
-      throw error;
-    }
-  };
-
-  delete = async (connection: any,  id: number) => {
-    try {
-      const sql = `DELETE FROM ${this.name} WHERE id = ${id}`;
-      await connection.executeSql(sql);
-      console.log(`Dati eliminati dalla tabella ${this.name} con successo!`);
-    } catch (error) {
-      console.error(`Errore durante l'eliminazione dei dati dalla tabella ${this.name}:`, error);
-      throw error;
+  delete = async (id: number) => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    if (connection) {
+      try {
+        const sql = `DELETE FROM ${this.name} WHERE id = ${id}`;
+        await connection.executeSql(sql);
+        console.log(`Delete table "${this.name}"`);
+      } catch (error) {
+        console.error(`Error eliminated ${this.name}:`, error);
+        throw error;
+      }
     }
   };
 
@@ -97,6 +141,7 @@ class Tables {
       throw error;
     }
   };
+
   getTableNames = async (connection: any) => {
     const sql = "SELECT name FROM sqlite_master WHERE type='table'";
     try {

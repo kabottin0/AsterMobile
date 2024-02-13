@@ -1,17 +1,17 @@
-// extend table
 import Tables from "../Tables";
 import Database from "../connectionDB";
-import Product from "./product";
 
-class OrderHasProducts extends Tables {
+class Orders extends Tables {
   id: number;
-  products: Product[];
+  orderDate: string;
+  note: string;
   created_at: Date;
   updated_at: Date;
 
   constructor(
     id: number,
-    products: Product[],
+    orderDate: string,
+    note: string,
     created_at: Date,
     updated_at: Date,
     name: string,
@@ -19,7 +19,8 @@ class OrderHasProducts extends Tables {
   ) {
     super(name, columns);
     this.id = id;
-    this.products = products
+    this.orderDate = orderDate;
+    this.note = note
     this.created_at = created_at;
     this.updated_at = updated_at;
   }
@@ -88,8 +89,9 @@ class OrderHasProducts extends Tables {
       }
     }
   };
+
 }
 
-export default OrderHasProducts;
+export default Orders;
 
 
