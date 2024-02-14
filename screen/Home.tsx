@@ -14,9 +14,14 @@ const Home = () => {
   // ToDO create funct for get currentVersion
   const currentVersion = 3
 
-  const goToProduct = () => {
-    navigation.navigate('Products')
+  const goToOrders = () => {
+    navigation.navigate('Orders')
   }
+
+  const goToTerminalino = () => {
+    navigation.navigate('Terminalino')
+  }
+
 
 
   const init = async () => {
@@ -32,7 +37,6 @@ const Home = () => {
         // setcheckUpdate()
         // console.log('effettuare migration')
       }
-
     } catch (error) {
       console.log('dati non inseriti', error)
     }
@@ -49,13 +53,18 @@ const Home = () => {
     <>
       <View justifyContent={'center'} alignItems={'center'}>
         <SafeAreaView>
-          <Text>
-            Home Page
-          </Text>
           <View justifyContent={'center'} alignItems={'center'}>
-            <Button onPress={goToProduct} >
-              go to Product list
-            </Button>
+            <Text>
+              Home Page
+            </Text>
+            <View justifyContent={'center'} alignItems={'center'} style={{ flexDirection: 'row' }}>
+              <Button onPress={goToOrders} style={{ margin: 8 }} >
+                Ordini
+              </Button>
+              <Button onPress={goToTerminalino} >
+                Terminalino
+              </Button>
+            </View>
           </View>
         </SafeAreaView>
       </View>

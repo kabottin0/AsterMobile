@@ -3,8 +3,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./Home";
 import LoginScreen from "./auth/LoginScreen";
 import SignupScreen from "./auth/SignUpScreen";
-import ProductList from "./components/Product";
 import ProductsList from "./ProductsList";
+import Terminalino from "./Terminalino";
+import Orders from "./Orders";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,14 @@ const StackMain = () => {
          <Stack.Screen
           name="Products"
           component={ProductsList}
+        />
+          <Stack.Screen
+          name="Terminalino"
+          component={Terminalino}
+        />
+          <Stack.Screen
+          name="Orders"
+          component={Orders}
         />
       </Stack.Navigator>
     </>
