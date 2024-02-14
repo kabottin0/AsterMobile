@@ -20,7 +20,6 @@ class Tables {
     this.name = name;
     this.columns = columns;
   }
-  //creare metodo init da richiamare nella home dove avviene il controllo se esistono tabelle nel db, e se dall'api arrivano dei cambiamenti updatare le tabelle
 
   init = async () => {
     const db = new Database();
@@ -56,7 +55,7 @@ class Tables {
         await connection.executeSql(sql);
         console.log(`Table "${this.name}" create!`);
       } catch (error) {
-        console.error(`Table "${this.name}" not created:`, error);
+        console.log(`Table::2 "${this.name}" not created:`, error);
         throw error;
       }
     }
@@ -106,7 +105,7 @@ class Tables {
       try {
         const sql = `SELECT * FROM ${this.name} WHERE ${criteria}`;
         const result = await connection.executeSql(sql);
-        console.log('result[0].rows.item', result[0].rows.item(0))
+        // console.log('result[0].rows.item', result[0].rows.item(0))
         return result[0].rows.raw();
       } catch (error) {
         console.error(`Error in get data from "${this.name}" table:`, error);
@@ -142,17 +141,18 @@ class Tables {
     }
   };
 
-  getTableNames = async (connection: any) => {
+  getTableNames = async () => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
     const sql = "SELECT name FROM sqlite_master WHERE type='table'";
     try {
 
       const result = await connection.executeSql(sql);
-      console.log('result', result[0])
-      console.log('result[0].rows.item(0)', result[0].rows.item(0))
       const tableNames = [];
       for (let i = 0; i < result[0].rows.length; i++) {
         tableNames.push(result[0].rows.item(i).name);
       }
+      console.log('tableNames::', tableNames)
       return tableNames;
     } catch (error) {
       console.error('Errore durante il recupero dei nomi delle tabelle:', error);
@@ -160,6 +160,24 @@ class Tables {
     }
   };
 
+  getTableInfo = async () => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    const sql = `SELECT * FROM ${this.name}`;
+    try {
+
+      const result = await connection.executeSql(sql);
+      const tableInfo = [];
+      for (let i = 0; i < result[0].rows.length; i++) {
+        tableInfo.push(result[0].rows.item(i));
+      }
+        console.log('tatableInfo', tableInfo)
+      return tableInfo;
+    } catch (error) {
+      console.error('Errore durante il recupero dei nomi delle tabelle:', error);
+      throw error;
+    }
+  };
 
 
 
