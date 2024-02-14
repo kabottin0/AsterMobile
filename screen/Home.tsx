@@ -3,57 +3,47 @@ import { SafeAreaView, Text, View } from "react-native"
 import { useEffect, useState } from "react";
 import Tables from "./DB/Tables";
 import { useNavigation } from "@react-navigation/native";
-import Orders from "./DB/models/orders";
-
-
+import Migration from "./DB/models/migrations";
 
 const Home = () => {
   const [checkUpdate, setCheckUpdate] = useState(false)
   const navigation = useNavigation()
+  const tableSystem = new Tables('systemDB', [{ name: 'version', type: 'string' }])
+  const migration = new Migration('systemDB', [{ name: 'date', type: 'string' }])
 
-
-  const tablesToInit = [
-    {
-      name: 'orders2',
-      columns: [
-        { name: 'id', type: 'INTEGER PRIMARY KEY' },
-        { name: 'orderDate', type: 'TEXT' },
-        { name: 'note', type: 'TEXT' },
-        { name: 'created_at', type: 'DATE' },
-        { name: 'updated_at', type: 'DATE' },
-
-      ]
-    }
-  ];
-
-  const dataOrder = {
-    id: 1,
-    orderDate: '22-11-2024',
-    note: 'primo prezzo',
-    created_at: 10 - 12 - 2024,
-    updated_at: 10 - 12 - 2024,
-  }
+  // ToDO create funct for get currentVersion
+  const currentVersion = 3
 
   const goToProduct = () => {
     navigation.navigate('Products')
   }
 
-  const initTables = async () => {
+
+  const init = async () => {
     try {
-      await Promise.all(tablesToInit.map(async (tableInfo) => {
-        const table = new Tables(tableInfo.name, tableInfo.columns);
-        await table.init();
-      }));
+      const versionDb = await tableSystem.get(`version = ${currentVersion}`)
+      let versionValue = versionDb[0]?.version
+      if (versionValue == currentVersion) {
+        console.log('versione verificata')
+        //ToDo dal serivizio api verificare i dati delle tabelle per eventuale update
+        //setcheckUpdate()
+      } else {
+        // ToDO fare la miagration
+        // setcheckUpdate()
+        // console.log('effettuare migration')
+      }
+
     } catch (error) {
-      console.log('Error', error);
+      console.log('dati non inseriti', error)
     }
-  };
+  }
 
   useEffect(() => {
-    if (!checkUpdate) {
-      initTables()
+    if (checkUpdate) {
+      init()
     }
-  }, [checkUpdate])
+  }, [checkUpdate]);
+
 
   return (
     <>
@@ -87,3 +77,15 @@ export default Home;
 //     console.log('error', error)
 //   }
 // }
+
+// const initTables = async () => {
+//   try {
+//     await Promise.all(tablesToInit.map(async (tableInfo) => {
+//       const table = new Tables(tableInfo.name, tableInfo.columns);
+//       // await table.init();
+//       await table.getTableInfo()
+//     }));
+//   } catch (error) {
+//     console.log('Error', error);
+//   }
+// };
