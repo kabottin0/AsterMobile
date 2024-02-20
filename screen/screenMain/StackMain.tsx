@@ -7,6 +7,7 @@ import Terminalino from "./Terminalino";
 import Orders from "./Orders";
 import BarcodeReader from "../components/BarCodeReader";
 import BottomTab from "../components/BottomTab";
+import Cart from "./Cart";
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +56,10 @@ const StackMain = () => {
          <Stack.Screen
           name="Barcode"
           component={BarcodeReader}
+        />
+         <Stack.Screen
+          name="Cart"
+          component={Cart}
         />
       </Stack.Navigator>
     </>
