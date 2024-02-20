@@ -61,7 +61,6 @@ class Tables {
     }
   }
 
-
   insert = async (data: any) => {
     const db = new Database();
     const connection = await db.getDBConnection();
@@ -79,8 +78,6 @@ class Tables {
       }
     }
   };
-
-
 
   update = async (id: number, data: any) => {
     const db = new Database();
@@ -105,7 +102,7 @@ class Tables {
       try {
         const sql = `SELECT * FROM ${this.name} WHERE ${criteria}`;
         const result = await connection.executeSql(sql);
-        // console.log('result[0].rows.item', result[0].rows.item(0))
+        console.log('result[0].rows.item', result[0].rows.item(0))
         return result[0].rows.raw();
       } catch (error) {
         console.error(`Error in get data from "${this.name}" table:`, error);
@@ -165,7 +162,6 @@ class Tables {
     const connection = await db.getDBConnection();
     const sql = `SELECT * FROM ${this.name}`;
     try {
-
       const result = await connection.executeSql(sql);
       const tableInfo = [];
       for (let i = 0; i < result[0].rows.length; i++) {
@@ -178,8 +174,6 @@ class Tables {
       throw error;
     }
   };
-
-
 
 }
 
