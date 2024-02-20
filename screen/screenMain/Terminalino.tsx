@@ -25,9 +25,8 @@ const Terminalino = () => {
     { name: 'name', type: 'string' },
     { name: 'price', type: 'integer' },
   ])
-
+  const arrayFilter = ['Ean', 'Name', 'Price']
   const data = [
-
     {
       ean: '3',
       name: 'prova2',
@@ -38,9 +37,11 @@ const Terminalino = () => {
       name: 'prova3',
       price: 11
     },
-
   ]
 
+  const getSelectValue = (val) => {
+    setSelectedFilter(val)
+  }
 
   const getBarCode = (val) => {
     //ToDo funzione per catturare l'ean del prodotto tramite bar code
@@ -77,27 +78,32 @@ const Terminalino = () => {
 
   // };
   const handleSearch = (text) => {
-    let filtered = [];
+    let filterData = null
     switch (selectedFilter) {
       case 'ean':
-        filtered = data.filter(item => item.ean.toLowerCase().includes(text.toLowerCase()));
-        console.log('selectedFilter, ean', selectedFilter)
+        filterData = data.filter(item => item.ean == text);
+        setDetailsProducts(filterData)
         break;
       case 'name':
-        filtered = data.filter(item => item.name.toLowerCase().includes(text.toLowerCase()));
-        console.log('selectedFilter, name', selectedFilter)
+        filterData = data.filter(item => item.name == text);
+        setDetailsProducts(filterData)
+
         break;
       case 'price':
-        filtered = data.filter(item => item.price.toString().toLowerCase().includes(text.toLowerCase()));
-        console.log('selectedFilter, price', selectedFilter)
+        filterData = data.filter(item => item.price == text);
+        setDetailsProducts(filterData)
+
         break;
       default:
-        filtered = data;
-        break;
+        break
     }
-    setDetailsProducts(filtered);
     setSearchText(text);
-  };
+  }
+
+  useEffect(() => {
+    console.log('detailproducts', detailsProduct)
+  }, [detailsProduct])
+  
   const renderItem = ({ item }) => {
     return (
       <ProductList
@@ -125,14 +131,7 @@ const Terminalino = () => {
           value={searchText}
           handle={handleSearch}
         />
-        <FilterSearch
-          label1={'Ean'}
-          label2={'Name'}
-          label3={'Price'}
-          value1={'ean'}
-          value2={'name'}
-          value3={'price'}
-        />
+        <FilterSearch arrayFilter={arrayFilter} getSelectValue={getSelectValue} />
         <View>
           <Form />
         </View>

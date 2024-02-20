@@ -2,11 +2,14 @@ import { FlatList, Icon, Input, Text, View } from "native-base"
 import { useState } from "react"
 import ProductList from "../components/Product"
 import FilterSearch from "../components/FilterSearch"
+import SearchInput from "../components/SearchInput"
 
 
 const Orders = () => {
   const [searchText, setSearchText] = useState('')
-
+  const [selectedFilter, setSelectedFilter] = useState('');
+  const [detailsProduct, setDetailsProducts] = useState([])
+  const arrayFilter = ['Id', 'title', 'description', 'ImageUri']
   const products = [
     {
       id: 1,
@@ -48,6 +51,7 @@ const Orders = () => {
   const print = () => {
     //toDo funzione stampa per la termical printer
   }
+  
   const renderItem = ({ item }) => {
     return (
       <ProductList
@@ -59,45 +63,50 @@ const Orders = () => {
     );
   };
 
-  const handleSearch = (text: string) => {
-    setSearchText(text)
-    console.log('searchText', searchText)
+  const getSelectValue = (val) => {
+    setSelectedFilter(val)
+  }
+
+  const handleSearch = (val) => {
+   let text = val.toLowerCase()
+    let filterData = null
+    switch (selectedFilter) {
+      case 'id':
+        filterData = products.filter(item => item.id == text);
+        setDetailsProducts(filterData)
+        break;
+      case 'title':
+        filterData = products.filter(item => item.title.includes(text));
+        setDetailsProducts(filterData)
+
+        break;
+      case 'description':
+        filterData = products.filter(item => item.description.includes(text));
+        setDetailsProducts(filterData)
+        break;
+      default:
+        break
+    }
+    setSearchText(text);
   }
   return (
     <>
       <View justifyContent={'center'} alignItems={'center'}>
         <Text> Pagina degli ordini</Text>
         <View justifyContent={'center'} alignItems={'center'}>
-          <Input
-            mt={4}
-            mb={1}
-            placeholder="Cerca prodotti..."
-            variant="rounded"
-            fontSize={'md'}
-            width="90%"
-            borderRadius="10"
-            py={3}
-            bgColor={'white'}
-            px={2}
-            value={searchText}
-            InputLeftElement={<Icon m="2" ml="3" size="6" color="gray.400" name="search" />}
-            onChangeText={handleSearch} />
+          <SearchInput
+          value={searchText}
+          handle={(val)=>handleSearch(val)} />
         </View>
-        <FilterSearch 
-        label1={'Id'}
-        label2={'totale'}
-        label3={'data'}
-        value1={'id'}
-        value2={'totale'}
-        value3={'data'}
-        />
-       
+        <FilterSearch arrayFilter={arrayFilter} getSelectValue={getSelectValue} />
+
+
         <Text>Storico ricevute</Text>
         <Text>Stampa ricevuta</Text>
       </View>
 
       <FlatList
-        data={products}
+        data={detailsProduct}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         onEndReachedThreshold={0.5}

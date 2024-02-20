@@ -34,7 +34,7 @@ const StackMain = () => {
           component={LoginScreen}
         />
         <Stack.Screen
-          name="Home"
+          name="Start"
           component={BottomNav}
           options={{
             headerShown: false
