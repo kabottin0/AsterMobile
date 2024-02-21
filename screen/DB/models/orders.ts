@@ -1,10 +1,11 @@
-import Tables from "../Tables";
 import Database from "../connectionDB";
 
-class Orders extends Tables {
+class Orders {
   id: number;
   orderDate: string;
   note: string;
+  total: number;
+  user_id: number;
   created_at: Date;
   updated_at: Date;
 
@@ -12,19 +13,44 @@ class Orders extends Tables {
     id: number,
     orderDate: string,
     note: string,
+    total: number,
+    user_id: number,
     created_at: Date,
     updated_at: Date,
-    name: string,
-    columns: { name: string, type: string }[]
   ) {
-    super(name, columns);
     this.id = id;
     this.orderDate = orderDate;
-    this.note = note
+    this.note = note;
+    this.total = total;
+    this.user_id = user_id;
     this.created_at = created_at;
     this.updated_at = updated_at;
   }
 
+  createOrdersTable = async () => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    if (connection) {
+      try {
+        await connection.executeSql(`
+          CREATE TABLE IF NOT EXISTS orders (
+            id INTEGER PRIMARY KEY,
+            orderDate INTEGER,
+            note TEXT,
+            total INTEGER,
+            created_at DATE,
+            updated_at DATE,
+            user_id INTEGER,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+          )
+        `);
+        console.log('Tabella "products" creata correttamente.');
+      } catch (error) {
+        console.error('Errore durante la creazione della tabella "products":', error);
+        throw error;
+      }
+    }
+  };
   insert = async (data: any) => {
     const db = new Database();
     const connection = await db.getDBConnection();

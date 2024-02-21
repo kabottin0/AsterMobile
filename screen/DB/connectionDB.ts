@@ -4,7 +4,7 @@ import { openDatabase } from "react-native-sqlite-storage";
 
 class Database {
     getDBConnection = async () => {
-        return openDatabase({ name: 'aster-mobile.db', location: 'default' });
+        return openDatabase({ name: 'test-app.db', location: 'default' });
       };
       
 } 

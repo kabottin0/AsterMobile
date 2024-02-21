@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Tables from "../DB/Tables";
 import { useNavigation } from "@react-navigation/native";
 import Migration from "../DB/models/migrations";
+import Product from "../DB/models/product";
 
 const Home = () => {
   const [checkUpdate, setCheckUpdate] = useState(false)
@@ -29,8 +30,6 @@ const Home = () => {
   }
 
 
-
-
   //ToDo sync se non esiste aggiungi se esiste update
   const init = async () => {
     try {
@@ -39,8 +38,9 @@ const Home = () => {
       if (versionValue == currentVersion) {
         console.log('versione verificata')
         const id = 'map degli id array data'
-        const record = await tableSystem.get('id=id');
-        console.log('record', record)
+
+        // const record = await tableSystem.get('id=id');
+        // console.log('record', record)
         // if (record.id) {
         //   await tableSystem.update(record.id, data)
         // } else {
