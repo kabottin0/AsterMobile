@@ -4,9 +4,9 @@ import ProductList from "../components/Product"
 import FilterSearch from "../components/FilterSearch"
 import SearchInput from "../components/SearchInput"
 import { useNavigation } from "@react-navigation/native"
-import { createOrdersTable, createProductTable } from "../DB/models/dataModel/createAllTable"
-import productData, { orders } from "../data/datiGrezzi"
-import { productModel } from "../DB/models/dataModel/modelSchema"
+import { cartTable, createProductTable } from "../DB/models/dataModel/createAllTable"
+import { carts, productModel } from "../DB/models/dataModel/modelSchema"
+import Migration from "../DB/models/migrations"
 
 const Orders = () => {
   const navigation = useNavigation()
@@ -15,10 +15,10 @@ const Orders = () => {
   const [detailsProduct, setDetailsProducts] = useState([])
   const [productData, setProductData] = useState([])
 
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(true)
   const names = productModel.map(item => item.name);
 
-  
+
   //ToDo tabella operazione "ordini ha più operazioni", status "inviato" "bozza", lista prodotti selezionati
   const requestProductsList = () => { }
   const saveProductsList = () => {
@@ -40,19 +40,28 @@ const Orders = () => {
   }
 
   const getData = async () => {
-    //  await createProductTable.insert(productData)
+    // await createProductTable.insert(productModel)  
     const productData = await createProductTable.getAll()
     setProductData(productData)
+  }
+
+  const addToCart = async (item) => {
+    const newItem = [{
+      description: item?.description,
+      eanId: item?.eanId,
+      id: item?.id,
+      imagePath: item?.imagePath,
+      price: item?.price,
+      productName: item?.productName
+    }]
+    await cartTable.insert(newItem)
   }
 
   const renderItem = ({ item }) => {
     return (
       <ProductList
-        onPress={goToCart}
-        imagePath={item.imageUri}
-        productName={item.title}
-        price={item.price}
-        description={item.description}
+        addToCart={addToCart}
+        item={item}
       />
     );
   };
@@ -102,8 +111,8 @@ const Orders = () => {
             handle={(val) => handleSearch(val)} />
         </View>
         <FilterSearch arrayFilter={names} getSelectValue={getSelectValue} />
-        <Pressable onPress={()=>navigation.navigate('History')}>
-        <Text>Storico ricevute</Text>
+        <Pressable onPress={() => navigation.navigate('History')}>
+          <Text>Storico ricevute</Text>
         </Pressable>
         <Text>Stampa ricevuta</Text>
       </View>

@@ -1,13 +1,17 @@
 import { Image, Pressable, Text, View } from "native-base";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { cartTable } from "../DB/models/dataModel/createAllTable";
 
-const ProductList = ({ onPress, imagePath, productName, price, description }) => {
+const ProductList = ({item, addToCart }) => {
+  const { productName, price, imagePath, description } = item || {};
+
+
 
   return (
     <>
       <Pressable
         _pressed={{ opacity: 0.5 }}
-        onPress={onPress}
+        onPress={()=> console.log('go to detail')}
         m={2}
       >
         <View flexDir={'row'} justifyContent={'center'} alignItems={'center'} maxHeight={'80px'}>
@@ -26,9 +30,11 @@ const ProductList = ({ onPress, imagePath, productName, price, description }) =>
           <View flex={1}>
             <Text color={'gray.500'} fontSize="sm" textAlign={'left'} >{price} €</Text>
           </View>
-          <View flex={1} alignItems={'flex-end'}>
-            <MaterialCommunityIcons name="cart" size={30} color="#900" />
-          </View>
+          <Pressable onPress={()=>addToCart(item)}>
+            <View flex={1} alignItems={'flex-end'}>
+              <MaterialCommunityIcons name="cart" size={30} color="#900" />
+            </View>
+          </Pressable>
         </View>
       </Pressable>
     </>
