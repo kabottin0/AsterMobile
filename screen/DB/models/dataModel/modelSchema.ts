@@ -30,3 +30,10 @@ export const ordersModel = [
     { name: 'created_at', type: 'Date' },
     { name: 'updated_at', type: 'Date' }
   ];
+
+  export const systemDb = [
+    {name: 'id', type: 'number'},
+    {name: 'version', type: 'number'},
+    { name: 'created_at', type: 'Date' },
+    { name: 'updated_at', type: 'Date' }
+  ]

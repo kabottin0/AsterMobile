@@ -6,12 +6,13 @@ import Terminalino from "../screenMain/Terminalino";
 import Home from "../screenMain/Home";
 import Setting from "../screenMain/Setting";
 import { useNavigation } from "@react-navigation/native";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 const Tab = createBottomTabNavigator();
 
 const BottomTab = () => {
-const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const CustomTabBarButtom = ({ children, onPress }) => {
 
@@ -29,6 +30,15 @@ const navigation = useNavigation();
   const handleLogout = () => {
     navigation.navigate('Login')
   }
+  const goToUserProfile = () => {
+    navigation.navigate('UserProfile')
+  }
+
+  const goToCart = () => {
+    navigation.navigate('Cart')
+  }
+
+
 
   return (
     <Tab.Navigator
@@ -52,24 +62,38 @@ const navigation = useNavigation();
           shadowOffset: 10,
         },
         headerRight: () => (
-          <Pressable onPress={handleLogout} style={{ marginRight: 15 }}>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}>Logout</Text>
-          </Pressable>
+          <View flexDir={'row'} justifyContent={'center'} alignItems={'center'}>
+            <Pressable onPress={goToUserProfile} px={1} >
+              <MaterialCommunityIcons name="account" size={30} color="#900" />
+            </Pressable>
+            <Pressable onPress={goToCart}  px={1} >
+              <MaterialCommunityIcons name="cart" size={30} color="#900" />
+            </Pressable>
+            <Pressable onPress={handleLogout} px={1}>
+            <MaterialCommunityIcons name="logout" size={30} color="#900" />
+            </Pressable>
+          </View>
         ),
       }}>
 
-        <Tab.Screen name="Home" component={Home} options={{
-        tabBarIcon: ({ focused }) => (
-          <View justifyContent={'center'} alignItems={'center'} style={{borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius:8, padding: 8, top:10}}>
-            <Text style={{ color: focused ? '#1364B6' : 'black', fontSize: 12, fontWeight: 'bold' }}>Home</Text>
-          </View>
-        ),
-        headerTitle: 'Home'
-      }} />
-      
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          headerTitleAlign: 'left',
+          tabBarIcon: ({ focused }) => (
+            <View justifyContent={'center'} alignItems={'center'} style={{ borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius: 8, padding: 8, top: 10 }}>
+              <Text style={{ color: focused ? '#1364B6' : 'black', fontSize: 12, fontWeight: 'bold' }}>Home</Text>
+            </View>
+          ),
+          headerTitle: 'Home'
+        }}
+      />
+
+
       <Tab.Screen name="Setting" component={Setting} options={{
         tabBarIcon: ({ focused }) => (
-          <View justifyContent={'center'} alignItems={'center'} style={{borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius:8, padding: 8, top:10}}>
+          <View justifyContent={'center'} alignItems={'center'} style={{ borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius: 8, padding: 8, top: 10 }}>
             <Text style={{ color: focused ? '#1364B6' : 'black', fontSize: 12, fontWeight: 'bold' }}>Setting</Text>
           </View>
         ),
@@ -77,7 +101,7 @@ const navigation = useNavigation();
       }} />
       <Tab.Screen name="Ordini" component={Orders} options={{
         tabBarIcon: ({ focused }) => (
-          <View justifyContent={'center'} alignItems={'center'} style={{borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius:8, padding: 8, top:10}} >
+          <View justifyContent={'center'} alignItems={'center'} style={{ borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius: 8, padding: 8, top: 10 }} >
             <Text style={{ color: focused ? '#1364B6' : 'black', fontSize: 12, fontWeight: 'bold' }}>Ordini</Text>
           </View>
         ),
@@ -86,7 +110,7 @@ const navigation = useNavigation();
 
       <Tab.Screen name="Terminalino" component={Terminalino} options={{
         tabBarIcon: ({ focused }) => (
-          <View justifyContent={'center'} alignItems={'center'} style={{borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius:8, padding: 8, top: 10}} >
+          <View justifyContent={'center'} alignItems={'center'} style={{ borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius: 8, padding: 8, top: 10 }} >
             <Text style={{ color: focused ? '#1364B6' : 'black', fontSize: 11, fontWeight: 'bold' }}>Terminalino</Text>
           </View>
         ),

@@ -10,6 +10,8 @@ import ProductList from "../components/Product";
 import Form from "../components/Form";
 import SearchInput from "../components/SearchInput";
 import FilterSearch from "../components/FilterSearch";
+import { productModel } from "../DB/models/dataModel/modelSchema";
+import { createProductTable } from "../DB/models/dataModel/createAllTable";
 
 
 const Terminalino = () => {
@@ -17,27 +19,15 @@ const Terminalino = () => {
   const [boolean, setBoolean] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('');
+  const [products, setProducts] = useState([])
 
   const [detailsProduct, setDetailsProducts] = useState([])
 
-  const table = new Tables('esempioProdotti', [
-    { name: 'ean', type: 'string' },
-    { name: 'name', type: 'string' },
-    { name: 'price', type: 'integer' },
-  ])
-  const arrayFilter = ['Ean', 'Name', 'Price']
-  const data = [
-    {
-      ean: '3',
-      name: 'prova2',
-      price: 12
-    },
-    {
-      ean: '4',
-      name: 'prova3',
-      price: 11
-    },
-  ]
+  const names = productModel.map(item => item.name);
+
+
+
+
 
   const getSelectValue = (val) => {
     setSelectedFilter(val)
@@ -62,35 +52,25 @@ const Terminalino = () => {
     setBoolean(!boolean);
   }
 
-  // const handleSearch = (text: string) => {
-  //   setSearchText(text)
-  //   console.log('searchText', searchText)
-  // }
+  const getProducts = async () => {
+    const productData = await createProductTable.getAll()
+    console.log('productData:::::', productData)
+    setProducts(productData)
+  }
 
-  //ToDo fare lo switch per la select del filtro
-  // const handleSearch = (text) => {
-  //   const filtered = data
-  //     .filter((item) =>
-  //       item.name.toLowerCase().includes(text.toLowerCase())
-  //     )
-  //   setDetailsProducts(filtered)
-  //   setSearchText(text);
-
-  // };
   const handleSearch = (text) => {
     let filterData = null
     switch (selectedFilter) {
       case 'ean':
-        filterData = data.filter(item => item.ean == text);
+        filterData = products.filter(item => item.ean == text);
         setDetailsProducts(filterData)
         break;
-      case 'name':
-        filterData = data.filter(item => item.name == text);
+      case 'productName':
+        filterData = products.filter(item => item?.productName?.toLowerCase().includes(text));
         setDetailsProducts(filterData)
-
         break;
       case 'price':
-        filterData = data.filter(item => item.price == text);
+        filterData = products.filter(item => item.price == text);
         setDetailsProducts(filterData)
 
         break;
@@ -100,21 +80,22 @@ const Terminalino = () => {
     setSearchText(text);
   }
 
-  useEffect(() => {
-    console.log('detailproducts', detailsProduct)
-  }, [detailsProduct])
-  
+
   const renderItem = ({ item }) => {
     return (
       <ProductList
-        onPress={() => console.log('Prodotto selezionato:', item.title)}
-        imageUri={item.imageUri}
-        title={item.name}
-        description={item.price}
+        onPress={() => setDetailsProducts(item)}
+        imagePath={item.imageUri}
+        price={item.price}
+        productName={item.name}
+        description={item.description}
       />
     );
   };
+
+
   useEffect(() => {
+    getProducts()
   }, [])
 
 
@@ -131,25 +112,32 @@ const Terminalino = () => {
           value={searchText}
           handle={handleSearch}
         />
-        <FilterSearch arrayFilter={arrayFilter} getSelectValue={getSelectValue} />
+        <FilterSearch arrayFilter={names} getSelectValue={getSelectValue} />
         <View>
-          <Form />
+          <Form
+            onChange={getProducts}
+            detailsProduct={{
+              productName: detailsProduct?.productName,
+              id: detailsProduct?.id,
+              price: detailsProduct?.price?.toString(),
+              eanId: detailsProduct?.eanId?.toString()
+            }}
+          />
         </View>
         <View justifyContent={'center'} alignItems={'center'} >
           <Button onPress={gobarcode}>
             Read bar code
           </Button>
-          <Button>
-            Conferma le modifiche e invia
-          </Button>
+
         </View>
         <Text>
           Elenco risultati prodotti
         </Text>
         <FlatList
-          data={detailsProduct}
+          data={products}
+          extraData={products}
           ListFooterComponent={<View height={'120px'} />}
-          keyExtractor={(item) => item.ean}
+          keyExtractor={(item) => item.id}
           renderItem={renderItem}
         />
         {/* <View justifyContent={'center'} alignItems={'center'}>
