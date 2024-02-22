@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Tables from "../DB/Tables";
 import { useNavigation } from "@react-navigation/native";
 import Migration from "../DB/models/migrations";
-import Product from "../DB/models/product";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { createProductTable } from "../DB/models/dataModel/createAllTable";
+
 
 const Home = () => {
   const [checkUpdate, setCheckUpdate] = useState(false)
@@ -25,42 +27,47 @@ const Home = () => {
     navigation.navigate('Orders')
   }
 
-  const goToTerminalino = () => {
-    navigation.navigate('Terminalino')
+  const goToCart = () => {
+    navigation.navigate('Cart')
   }
 
 
   //ToDo sync se non esiste aggiungi se esiste update
   const init = async () => {
     try {
-      const versionDb = await tableSystem.get(`version = ${currentVersion}`)
-      let versionValue = versionDb[0]?.version
-      if (versionValue == currentVersion) {
-        console.log('versione verificata')
-        const id = 'map degli id array data'
+      // await createProductTable.create()
+      // await createOrdersTable.create()
 
-        // const record = await tableSystem.get('id=id');
-        // console.log('record', record)
-        // if (record.id) {
-        //   await tableSystem.update(record.id, data)
-        // } else {
-        //   await tableSystem.insert(data)
-        // }
-        //ToDo dal serivizio api verificare i dati delle tabelle per eventuale update
-        //setcheckUpdate()
-      } else {
-        // ToDO fare la miagration
-        // setcheckUpdate()
-        // console.log('effettuare migration')
-      }
+      // const versionDb = await tableSystem.get(`version = ${currentVersion}`)
+      // let versionValue = versionDb[0]?.version
+      // await product.createProductsTable()
+      // if (versionValue == currentVersion) {
+      //   console.log('versione verificata')
+      //   const id = 'map degli id array data'
+
+      //   // const record = await tableSystem.get('id=id');
+      //   // console.log('record', record)
+      //   // if (record.id) {
+      //   //   await tableSystem.update(record.id, data)
+      //   // } else {
+      //   //   await tableSystem.insert(data)
+      //   // }
+      //   //ToDo dal serivizio api verificare i dati delle tabelle per eventuale update
+      //   //setcheckUpdate()
+      // } else {
+      //   // ToDO fare la miagration
+      //   // setcheckUpdate()
+      //   // console.log('effettuare migration')
+      // }
     } catch (error) {
       console.log('dati non inseriti', error)
     }
   }
 
 
+
   useEffect(() => {
-    if (checkUpdate) {
+    if (!checkUpdate) {
       init()
     }
     toast.show({
@@ -79,20 +86,11 @@ const Home = () => {
     <>
       <View justifyContent={'center'} alignItems={'center'}>
         <SafeAreaView>
-          {/* <View justifyContent={'center'} alignItems={'center'}>
-            <Text>
-              Home Page
-            </Text>
-            <View justifyContent={'center'} alignItems={'center'} style={{ flexDirection: 'row' }}>
-              <Button onPress={goToOrders} style={{ margin: 8 }} >
-                Ordini
-              </Button>
-              <Button onPress={goToTerminalino} style={{ margin: 8 }} >
-                Terminalino
-              </Button>
-
+          <Pressable onPress={goToCart}>
+            <View flex={1} alignItems={'flex-end'}>
+              <MaterialCommunityIcons name="cart" size={30} color="#900" />
             </View>
-          </View> */}
+          </Pressable>
 
         </SafeAreaView>
       </View>

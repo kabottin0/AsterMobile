@@ -1,7 +1,7 @@
 import { Image, Pressable, Text, View } from "native-base";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const ProductList = ({ onPress, imageUri, title, price, description }) => {
+const ProductList = ({ onPress, imagePath, productName, price, description }) => {
 
   return (
     <>
@@ -13,14 +13,14 @@ const ProductList = ({ onPress, imageUri, title, price, description }) => {
         <View flexDir={'row'} justifyContent={'center'} alignItems={'center'} maxHeight={'80px'}>
           <View flex={1}>
             <Image
-              source={{ uri: imageUri }}
+              source={{ uri: imagePath }}
               w={'100%'}
               h={'100%'}
               alt="Image"
             />
           </View>
           <View flex={3} pl={2}>
-            <Text fontWeight="bold" fontSize="md" textAlign={'left'} color={'green.700'}>{title}</Text>
+            <Text fontWeight="bold" fontSize="md" textAlign={'left'} color={'green.700'}>{productName}</Text>
             <Text color={'gray.500'} fontSize="sm" textAlign={'left'} >{description}</Text>
           </View>
           <View flex={1}>

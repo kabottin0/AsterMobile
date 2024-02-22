@@ -16,7 +16,7 @@ const FilterSearch = ({ arrayFilter, getSelectValue }: any) => {
                 endIcon: <CheckIcon size="5" />
               }} mt={1} onValueChange={(item) => getSelectValue(item)}>
               {arrayFilter?.map((item: any) => (
-                <Select.Item key={item} label={item} value={item.toLowerCase()} />
+                <Select.Item key={item} label={item} value={item} />
               ))}
             </Select>
           </Box>

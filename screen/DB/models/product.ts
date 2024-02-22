@@ -52,6 +52,24 @@ class Product {
     }
   };
 
+  getTableNames = async () => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    const sql = "SELECT name FROM sqlite_master WHERE type='table'";
+    try {
+      const result = await connection.executeSql(sql);
+      const tableNames = [];
+      for (let i = 0; i < result[0].rows.length; i++) {
+        tableNames.push(result[0].rows.item(i).name);
+      }
+      console.log('tableNames::', tableNames)
+      return tableNames;
+    } catch (error) {
+      console.error('Errore durante il recupero dei nomi delle tabelle:', error);
+      throw error;
+    }
+  };
+
   insert = async (data: any) => {
     const db = new Database();
     const connection = await db.getDBConnection();

@@ -66,11 +66,12 @@ class Tables {
     const connection = await db.getDBConnection();
     if (connection) {
       try {
-        const entries = Object.entries(data);
-        const columns = entries.map(([key]) => key).join(', ');
-        const values = entries.map(([, value]) => `"${value}"`).join(', ');
-        const sql = `INSERT INTO ${this.name} (${columns}) VALUES (${values})`;
-        await connection.executeSql(sql);
+        for (const item of data) {
+          const columns = Object.keys(item).join(', ');
+          const values = Object.values(item).map(value => typeof value === 'string' ? `'${value}'` : value).join(', ');
+          const sql = `INSERT INTO ${this.name} (${columns}) VALUES (${values})`;
+          await connection.executeSql(sql);
+        }
         console.log(` Data insert in table: "${this.name}" `);
       } catch (error) {
         console.error(`Error data insert ${this.name}:`, error);
@@ -79,6 +80,8 @@ class Tables {
     }
   };
 
+
+  
   update = async (id: number, data: any) => {
     const db = new Database();
     const connection = await db.getDBConnection();
@@ -98,12 +101,39 @@ class Tables {
   get = async (criteria: string) => {
     const db = new Database();
     const connection = await db.getDBConnection();
+    const resultArray= []
     if (connection) {
       try {
         const sql = `SELECT * FROM ${this.name} WHERE ${criteria}`;
         const result = await connection.executeSql(sql);
-        console.log('result[0].rows.item', result[0].rows.item(0))
-        return result[0].rows.raw();
+        const rows = result[0].rows.raw();
+        console.log(`Data from table "${this.name}":`);
+        for (const row of rows) {
+          resultArray.push(row)
+        }
+        console.log('result::', result)
+        return resultArray;
+      } catch (error) {
+        console.error(`Error in get data from "${this.name}" table:`, error);
+        throw error;
+      }
+    }
+  };
+  getAll = async () => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    let resultArray = []
+    if (connection) {
+      try {
+        const sql = `SELECT * FROM ${this.name}`;
+        const result = await connection.executeSql(sql);
+        const rows = result[0].rows.raw();
+        // console.log('rows', rows)
+        // console.log(`Data from table "${this.name}":`);
+        for (const row of rows) {
+          resultArray.push(row)
+        }
+        return resultArray;
       } catch (error) {
         console.error(`Error in get data from "${this.name}" table:`, error);
         throw error;
@@ -125,6 +155,22 @@ class Tables {
       }
     }
   };
+  
+  dropTable = async () => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    if (connection) {
+      try {
+        const sql = `DROP TABLE IF EXISTS ${this.name}`;
+        await connection.executeSql(sql);
+        console.log(`Table "${this.name}" dropped successfully.`);
+      } catch (error) {
+        console.error(`Error dropping table "${this.name}":`, error);
+        throw error;
+      }
+    }
+  };
+  
 
   checkIfTableExists = async (connection: any) => {
     const sql = `SELECT name FROM sqlite_master WHERE type='table' AND name=?;`;

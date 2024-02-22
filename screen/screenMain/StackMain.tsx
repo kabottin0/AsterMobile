@@ -8,6 +8,7 @@ import Orders from "./Orders";
 import BarcodeReader from "../components/BarCodeReader";
 import BottomTab from "../components/BottomTab";
 import Cart from "./Cart";
+import HistoryOrder from "./HistoryOrder";
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +61,10 @@ const StackMain = () => {
          <Stack.Screen
           name="Cart"
           component={Cart}
+        />
+        <Stack.Screen
+          name="History"
+          component={HistoryOrder}
         />
       </Stack.Navigator>
     </>
