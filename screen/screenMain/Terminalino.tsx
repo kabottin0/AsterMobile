@@ -6,7 +6,7 @@ import BarcodeExample from "../components/BarCodeReader";
 import { useNavigation } from "@react-navigation/native";
 import BarcodeReader from "../components/BarCodeReader";
 import Tables from "../DB/Tables";
-import ProductList from "../components/Product";
+import ProductList from "../components/ProductList";
 import Form from "../components/Form";
 import SearchInput from "../components/SearchInput";
 import FilterSearch from "../components/FilterSearch";

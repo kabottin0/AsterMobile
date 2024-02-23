@@ -1,5 +1,5 @@
 import { FlatList, View } from "native-base";
-import ProductList from "../components/Product";
+import ProductList from "../components/ProductList";
 import Product from "../DB/models/product";
 
 

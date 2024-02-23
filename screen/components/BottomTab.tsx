@@ -7,6 +7,7 @@ import Home from "../screenMain/Home";
 import Setting from "../screenMain/Setting";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Products from "../screenMain/Products";
 
 
 const Tab = createBottomTabNavigator();
@@ -91,15 +92,17 @@ const BottomTab = () => {
       />
 
 
-      <Tab.Screen name="Setting" component={Setting} options={{
+      <Tab.Screen name="Prodotti" component={Products} options={{
+        headerTitleAlign: 'left',
         tabBarIcon: ({ focused }) => (
           <View justifyContent={'center'} alignItems={'center'} style={{ borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius: 8, padding: 8, top: 10 }}>
-            <Text style={{ color: focused ? '#1364B6' : 'black', fontSize: 12, fontWeight: 'bold' }}>Setting</Text>
+            <Text style={{ color: focused ? '#1364B6' : 'black', fontSize: 12, fontWeight: 'bold' }}>Prodotti</Text>
           </View>
         ),
-        headerTitle: 'Setting'
+        headerTitle: 'Prodotti'
       }} />
       <Tab.Screen name="Ordini" component={Orders} options={{
+        headerTitleAlign: 'left',
         tabBarIcon: ({ focused }) => (
           <View justifyContent={'center'} alignItems={'center'} style={{ borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius: 8, padding: 8, top: 10 }} >
             <Text style={{ color: focused ? '#1364B6' : 'black', fontSize: 12, fontWeight: 'bold' }}>Ordini</Text>
@@ -109,6 +112,7 @@ const BottomTab = () => {
       }} />
 
       <Tab.Screen name="Terminalino" component={Terminalino} options={{
+        headerTitleAlign: 'left',
         tabBarIcon: ({ focused }) => (
           <View justifyContent={'center'} alignItems={'center'} style={{ borderColor: focused ? '#1364B6' : 'black', borderWidth: 2, borderRadius: 8, padding: 8, top: 10 }} >
             <Text style={{ color: focused ? '#1364B6' : 'black', fontSize: 11, fontWeight: 'bold' }}>Terminalino</Text>

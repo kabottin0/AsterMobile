@@ -1,10 +1,12 @@
-import { Box, Button, Center, HStack, Icon, Pressable, useToast } from "native-base";
-import { SafeAreaView, Text, View } from "react-native"
+import { Box,  Center, HStack, Icon, Pressable, useToast } from "native-base";
+import { SafeAreaView,} from "react-native"
 import { useEffect, useState } from "react";
 import Tables from "../DB/Tables";
 import { useNavigation } from "@react-navigation/native";
 import Migration from "../DB/models/migrations";
 import { createSystemDbTable } from "../DB/models/dataModel/createAllTable";
+import { Button, Text, View } from "react-native";
+import Modal from "react-native-modal";
 
 
 const Home = () => {
@@ -23,6 +25,12 @@ const Home = () => {
   const goToCart = () => {
     navigation.navigate('Cart')
   }
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
 
 
   //ToDo sync se non esiste aggiungi se esiste update
@@ -62,6 +70,17 @@ const Home = () => {
   return (
     <>
       <SafeAreaView>
+      <View>
+      <Button title="Show modal" onPress={toggleModal} />
+
+      <Modal isVisible={isModalVisible}>
+        <View style={{ flex: 1 }}>
+          <Text>Hello!</Text>
+
+          <Button title="Hide modal" onPress={toggleModal} />
+        </View>
+      </Modal>
+    </View>
       </SafeAreaView>
     </>
   )

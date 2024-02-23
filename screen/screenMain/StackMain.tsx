@@ -10,6 +10,7 @@ import BottomTab from "../components/BottomTab";
 import Cart from "./Cart";
 import HistoryOrder from "./HistoryOrder";
 import UserProfile from "./UserProfile";
+import Products from "./Products";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,7 +45,7 @@ const StackMain = () => {
           }}
         />
          <Stack.Screen
-          name="Products"
+          name="ProductsList"
           component={ProductsList}
         />
           <Stack.Screen
@@ -70,6 +71,10 @@ const StackMain = () => {
         <Stack.Screen
           name="UserProfile"
           component={UserProfile}
+        />
+         <Stack.Screen
+          name="Products"
+          component={Products}
         />
       </Stack.Navigator>
     </>
