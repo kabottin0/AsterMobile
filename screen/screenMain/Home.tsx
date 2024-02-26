@@ -54,33 +54,22 @@ const Home = () => {
   useEffect(() => {
     if (!checkUpdate) {
       init()
+      toast.show({
+        render: () => {
+          return <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}>
+            Toast prova per la sync dei dati
+          </Box>;
+        },
+        placement: "top-left",
+        duration: 2000
+      });
     }
-    toast.show({
-      render: () => {
-        return <Box bg="emerald.500" px="2" py="1" rounded="sm" mb={5}>
-          Toast prova per la sync dei dati
-        </Box>;
-      },
-      placement: "top-left",
-      duration: 2000
-    });
   }, [checkUpdate]);
 
 
   return (
     <>
       <SafeAreaView>
-      <View>
-      <Button title="Show modal" onPress={toggleModal} />
-
-      <Modal isVisible={isModalVisible}>
-        <View style={{ flex: 1 }}>
-          <Text>Hello!</Text>
-
-          <Button title="Hide modal" onPress={toggleModal} />
-        </View>
-      </Modal>
-    </View>
       </SafeAreaView>
     </>
   )

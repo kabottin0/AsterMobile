@@ -107,11 +107,11 @@ class Tables {
         const sql = `SELECT * FROM ${this.name} WHERE ${criteria}`;
         const result = await connection.executeSql(sql);
         const rows = result[0].rows.raw();
-        console.log(`Data from table "${this.name}":`);
+        // console.log(`Data from table "${this.name}":`);
         for (const row of rows) {
           resultArray.push(row)
         }
-        console.log('result::', result)
+        // console.log('result::', result)
         return resultArray;
       } catch (error) {
         console.error(`Error in get data from "${this.name}" table:`, error);
@@ -119,6 +119,7 @@ class Tables {
       }
     }
   };
+
   getAll = async () => {
     const db = new Database();
     const connection = await db.getDBConnection();
@@ -126,6 +127,27 @@ class Tables {
     if (connection) {
       try {
         const sql = `SELECT * FROM ${this.name}`;
+        const result = await connection.executeSql(sql);
+        const rows = result[0].rows.raw();
+        // console.log('rows', rows)
+        // console.log(`Data from table "${this.name}":`);
+        for (const row of rows) {
+          resultArray.push(row)
+        }
+        return resultArray;
+      } catch (error) {
+        console.error(`Error in get data from "${this.name}" table:`, error);
+        throw error;
+      }
+    }
+  };
+  getAllCriteria = async (criteria: string) => {
+    const db = new Database();
+    const connection = await db.getDBConnection();
+    let resultArray = []
+    if (connection) {
+      try {
+        const sql = `SELECT ${criteria} FROM ${this.name}`;
         const result = await connection.executeSql(sql);
         const rows = result[0].rows.raw();
         // console.log('rows', rows)
@@ -148,7 +170,7 @@ class Tables {
       try {
         const sql = `DELETE FROM ${this.name} WHERE id = ${id}`;
         await connection.executeSql(sql);
-        console.log(`Delete table "${this.name}"`);
+        console.log(`Delete record from "${this.name}"`);
       } catch (error) {
         console.error(`Error eliminated ${this.name}:`, error);
         throw error;
